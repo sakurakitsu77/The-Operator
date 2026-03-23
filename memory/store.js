@@ -56,10 +56,10 @@ class MemoryStore {
       'INSERT INTO agent_messages (created_at, from_agent, to_agent, content, status) VALUES (@created_at, @from_agent, @to_agent, @content, @status)'
     );
     this.fetchAgentMessages = this.db.prepare(
-      'SELECT * FROM agent_messages WHERE to_agent = @to_agent AND status = "new" ORDER BY id ASC LIMIT @limit'
+      "SELECT * FROM agent_messages WHERE to_agent = @to_agent AND status = 'new' ORDER BY id ASC LIMIT @limit"
     );
     this.markAgentMessageRead = this.db.prepare(
-      'UPDATE agent_messages SET status = "read" WHERE id = @id'
+      "UPDATE agent_messages SET status = 'read' WHERE id = @id"
     );
     this.fetchLatestServerState = this.db.prepare(
       'SELECT * FROM server_state WHERE guild_id = @guild_id ORDER BY id DESC LIMIT 1'
