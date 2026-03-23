@@ -28,11 +28,34 @@ function loadConfig() {
   const parsed = JSON.parse(raw);
   const resolved = deepResolve(parsed);
 
+  const usage = resolved?.llm?.usage || {};
+  const allowedAgents = (() => {
+    if (!usage.allowedAgents) return null;
+    if (Array.isArray(usage.allowedAgents)) return usage.allowedAgents;
+    if (typeof usage.allowedAgents === 'string') {
+      const list = usage.allowedAgents
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean);
+      return list.length > 0 ? list : null;
+    }
+    return null;
+  })();
+
   return {
     ...resolved,
     loop: {
       ...resolved.loop,
       intervalMinutes: Number(resolved.loop.intervalMinutes || 5)
+    },
+    llm: {
+      ...resolved.llm,
+      usage: {
+        maxCallsPerTick: Number(usage.maxCallsPerTick || 2),
+        cooldownMinutes: Number(usage.cooldownMinutes || 10),
+        cooldownMinutesOn402: Number(usage.cooldownMinutesOn402 || 60),
+        allowedAgents
+      }
     }
   };
 }

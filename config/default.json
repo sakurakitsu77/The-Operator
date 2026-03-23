@@ -17,6 +17,12 @@
       "model": "${OPENROUTER_MODEL}",
       "site": "${OPENROUTER_SITE}",
       "appName": "${OPENROUTER_APP}"
+    },
+    "usage": {
+      "maxCallsPerTick": "${LLM_MAX_CALLS_PER_TICK}",
+      "cooldownMinutes": "${LLM_COOLDOWN_MINUTES}",
+      "cooldownMinutesOn402": "${LLM_COOLDOWN_MINUTES_402}",
+      "allowedAgents": "${LLM_ALLOWED_AGENTS}"
     }
   },
   "db": {

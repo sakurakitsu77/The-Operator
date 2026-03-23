@@ -5,6 +5,18 @@ class LLMClient {
     this.provider = config?.llm?.provider || 'none';
     this.config = config?.llm || {};
     this.defaultOpenRouterModel = 'qwen/qwen3-next-80b-a3b-instruct:free';
+
+    const usage = this.config?.usage || {};
+    this.usage = {
+      maxCallsPerTick: Number(usage.maxCallsPerTick || 2),
+      cooldownMinutes: Number(usage.cooldownMinutes || 10),
+      cooldownMinutesOn402: Number(usage.cooldownMinutesOn402 || 60),
+      allowedAgents: usage.allowedAgents || null
+    };
+
+    this.currentTickId = null;
+    this.callsThisTick = 0;
+    this.cooldownUntil = 0;
   }
 
   async generate(agent, context) {
@@ -14,11 +26,38 @@ class LLMClient {
 
     const provider = this.provider.toLowerCase();
     if (provider === 'openrouter' && this.config.openrouter?.apiKey) {
+      if (!this.shouldUseLLM(agent, context)) {
+        return agent.defaultPlan(context);
+      }
       return this.generateOpenRouter(agent, context);
     }
 
     warn('LLM provider missing credentials or unsupported; using default plan for', agent.name);
     return agent.defaultPlan(context);
+  }
+
+  shouldUseLLM(agent, context) {
+    const tickId = context?.tickId ?? null;
+    if (tickId !== this.currentTickId) {
+      this.currentTickId = tickId;
+      this.callsThisTick = 0;
+    }
+
+    if (this.usage.allowedAgents && !this.usage.allowedAgents.includes(agent.name)) {
+      return false;
+    }
+
+    const now = Date.now();
+    if (this.cooldownUntil && now < this.cooldownUntil) {
+      return false;
+    }
+
+    if (this.callsThisTick >= this.usage.maxCallsPerTick) {
+      return false;
+    }
+
+    this.callsThisTick += 1;
+    return true;
   }
 
   buildPrompt(agent, context) {
@@ -106,17 +145,37 @@ class LLMClient {
       });
 
       if (!response.ok) {
+        this.applyCooldown(response.status);
         warn('OpenRouter response not ok', response.status);
         return agent.defaultPlan(context);
       }
 
       const data = await response.json();
       const content = data?.choices?.[0]?.message?.content || '';
+      this.resetCooldown();
       return this.parseModelOutput(content, agent, context);
     } catch (err) {
+      this.applyCooldown();
       warn('OpenRouter call failed; using default plan for', agent.name);
       return agent.defaultPlan(context);
     }
+  }
+
+  applyCooldown(status) {
+    const now = Date.now();
+    let minutes = this.usage.cooldownMinutes;
+    if (status === 402) {
+      minutes = this.usage.cooldownMinutesOn402;
+    }
+    if (status === 429) {
+      minutes = this.usage.cooldownMinutes;
+    }
+    const nextCooldown = now + minutes * 60 * 1000;
+    this.cooldownUntil = Math.max(this.cooldownUntil, nextCooldown);
+  }
+
+  resetCooldown() {
+    this.cooldownUntil = 0;
   }
 }
 

@@ -5,6 +5,7 @@ const { processActions } = require('../actions/actionMiddleware');
 function createLoop({ client, config, memoryStore, agentManager }) {
   let running = false;
   let lastActionResults = [];
+  let tickId = 0;
 
   async function tick() {
     if (running) return;
@@ -19,7 +20,8 @@ function createLoop({ client, config, memoryStore, agentManager }) {
       const context = {
         observation,
         lastActionResults,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        tickId: tickId += 1
       };
 
       const actions = await agentManager.runCycle(context);
