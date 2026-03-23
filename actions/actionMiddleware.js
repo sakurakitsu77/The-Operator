@@ -1,6 +1,6 @@
 const { loadPermissions, isAllowed } = require('./permissions');
 const { createChannel } = require('./executors/channel');
-const { createRole } = require('./executors/role');
+const { createRole, assignRole } = require('./executors/role');
 const { sendMessage } = require('./executors/message');
 const { createEvent } = require('./executors/event');
 const { setRules } = require('./executors/rules');
@@ -11,6 +11,7 @@ const { warn } = require('../core/logger');
 const EXECUTORS = {
   create_channel: createChannel,
   create_role: createRole,
+  assign_role: assignRole,
   send_message: sendMessage,
   create_event: createEvent,
   set_rules: setRules,

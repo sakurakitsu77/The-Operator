@@ -31,10 +31,82 @@ class SocialAgent extends BaseAgent {
     }
 
     const mentions = inbox.filter((msg) => msg.content?.type === 'mention');
+    const recentMemory = context.recentMemory || [];
+    const channels = observation?.channels || [];
+
+    const recentlyReplied = (userId, channelId, intent) => {
+      return recentMemory.some((row) => {
+        if (row.memory_type !== 'mention_reply') return false;
+        if (row.content?.userId !== userId) return false;
+        if (row.content?.channelId !== channelId) return false;
+        if (row.content?.intent !== intent) return false;
+        const createdAt = Date.parse(row.created_at || '');
+        return Number.isFinite(createdAt) && (Date.now() - createdAt) < 60 * 1000;
+      });
+    };
+
+    const hasChannel = (name) => channels.includes(name);
+
     mentions.forEach((msg) => {
       const userId = msg.content.userId;
       const channelId = msg.content.channelId;
-      const reply = `<@${userId}> I'm setting up the server world right now. Tell me what you'd like to see here.`;
+      const text = (msg.content.content || '').toLowerCase();
+
+      const wantsRoles = text.includes('role');
+      const wantsChannels = text.includes('channel');
+      const wantsStatus = text.includes('what are you doing') || text.includes('status');
+
+      let intent = 'generic';
+      if (wantsRoles && wantsChannels) intent = 'roles_channels';
+      else if (wantsRoles) intent = 'roles';
+      else if (wantsChannels) intent = 'channels';
+      else if (wantsStatus) intent = 'status';
+
+      if (recentlyReplied(userId, channelId, intent)) return;
+
+      let reply = `<@${userId}> I'm setting up the server world right now. Tell me what you'd like to see here.`;
+
+      if (intent === 'status') {
+        reply = `<@${userId}> I'm building out channels, rules, and the economy. Tell me your top priority and I'll focus on it.`;
+      } else if (intent === 'roles') {
+        reply = `<@${userId}> I can create roles, but assigning them may require Owner permission. Tell me the role names you want.`;
+      } else if (intent === 'channels') {
+        reply = `<@${userId}> I can create new channels. Tell me the names you want, or say "starter channels" for introductions and help.`;
+      } else if (intent === 'roles_channels') {
+        reply = `<@${userId}> I can create roles and channels. Share the role names and channel names you want, and I'll start building.`;
+      }
+
+      if (text.includes('starter channels')) {
+        const starterChannels = ['introductions', 'help'];
+        starterChannels.forEach((name) => {
+          if (!hasChannel(name)) {
+            actions.push({
+              agent: this.name,
+              action: 'create_channel',
+              name,
+              channel_type: 'text',
+              reason: 'User requested starter channels.'
+            });
+          }
+        });
+      }
+
+      if (wantsRoles && text.includes('assign')) {
+        actions.push({
+          agent: this.name,
+          action: 'assign_role',
+          user_id: userId,
+          role: 'Citizen',
+          reason: 'User requested role assignment.'
+        });
+
+        actions.push({
+          agent: this.name,
+          action: 'request_owner_permission',
+          permissions: ['assign_role'],
+          reason: 'User requested role assignment.'
+        });
+      }
 
       actions.push({
         agent: this.name,
@@ -45,7 +117,7 @@ class SocialAgent extends BaseAgent {
 
       memory.push({
         type: 'mention_reply',
-        content: { userId, channelId }
+        content: { userId, channelId, intent }
       });
     });
 

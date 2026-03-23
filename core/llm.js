@@ -81,7 +81,7 @@ class LLMClient {
       'messages: array of { to, content } for inter-agent messages.',
       'memory: array of { type, content } entries for logging.',
       'summary: short string.',
-      'Allowed action types: create_channel, create_role, send_message, create_event, set_rules, create_shop_item, create_job_role, award_currency, create_currency, request_owner_permission.',
+      'Allowed action types: create_channel, create_role, assign_role, send_message, create_event, set_rules, create_shop_item, create_job_role, award_currency, create_currency, request_owner_permission.',
       'If no action is needed, return empty arrays.'
     ].join(' ');
 

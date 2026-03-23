@@ -2,6 +2,7 @@
   "actions": {
     "create_channel": true,
     "create_role": false,
+    "assign_role": false,
     "create_event": false,
     "send_message": true,
     "set_rules": false,
