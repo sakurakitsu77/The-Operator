@@ -10,10 +10,30 @@ This is an experimental multi-agent AI system that treats a Discord server like 
 - `core/` orchestration loop, logging, agent manager, LLM adapter
 - `config/` config + permissions
 
-## Quick Start
+## Local Run
 1. Install deps: `npm install`
-2. Configure env: copy `.env.example` to `.env` and fill in Discord values.
+2. Export the required env vars in your shell (see Railway section for the list).
 3. Run: `npm start`
+
+## Railway Deploy
+This repo includes `railway.json` with a `npm start` deploy command.
+
+Required environment variables to set in Railway:
+- `DISCORD_TOKEN`
+- `DISCORD_GUILD_ID`
+- `DISCORD_OWNER_ID`
+- `LLM_PROVIDER` (use `openrouter`)
+- `OPENROUTER_API_KEY`
+- `OPENROUTER_MODEL` (use `deepseek/deepseek-chat-v3`)
+- `OPENROUTER_SITE` (optional)
+- `OPENROUTER_APP` (optional)
+- `LOOP_INTERVAL_MINUTES` (optional, default 5)
+- `ANNOUNCEMENTS_CHANNEL` (optional)
+- `RULES_CHANNEL` (optional)
+- `OWNER_REQUESTS_CHANNEL` (optional)
+- `DB_PATH` (optional, default `memory/ai_civ.db`)
+
+Note: SQLite data is stored on disk. For persistent memory across deploys, attach a Railway Volume and point `DB_PATH` at that mount.
 
 ## Permissions
 Edit `config/permissions.json` to grant/deny action types. Denied actions are logged so the Diplomacy agent can request access.
@@ -21,4 +41,4 @@ Edit `config/permissions.json` to grant/deny action types. Denied actions are lo
 ## Notes
 - Agents only output JSON actions; they never call Discord APIs directly.
 - The loop runs every `LOOP_INTERVAL_MINUTES` (default 5).
-- LLM integration is stubbed and falls back to deterministic behavior until wired.
+- LLM integration uses OpenRouter; if credentials are missing, it falls back to deterministic behavior.

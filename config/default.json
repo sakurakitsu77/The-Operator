@@ -12,13 +12,11 @@
   },
   "llm": {
     "provider": "${LLM_PROVIDER}",
-    "openai": {
-      "apiKey": "${OPENAI_API_KEY}",
-      "model": "${OPENAI_MODEL}"
-    },
-    "gemini": {
-      "apiKey": "${GEMINI_API_KEY}",
-      "model": "${GEMINI_MODEL}"
+    "openrouter": {
+      "apiKey": "${OPENROUTER_API_KEY}",
+      "model": "${OPENROUTER_MODEL}",
+      "site": "${OPENROUTER_SITE}",
+      "appName": "${OPENROUTER_APP}"
     }
   },
   "db": {
