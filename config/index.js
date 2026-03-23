@@ -56,6 +56,10 @@ function loadConfig() {
         cooldownMinutesOn402: Number(usage.cooldownMinutesOn402 || 60),
         allowedAgents
       }
+    },
+    permissions: {
+      ...resolved.permissions,
+      allowAll: String(resolved.permissions?.allowAll || '').toLowerCase() === 'true'
     }
   };
 }

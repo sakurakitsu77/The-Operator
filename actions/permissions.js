@@ -6,10 +6,15 @@ function loadPermissions(config) {
   if (!permPath) return { actions: {} };
   const resolved = path.resolve(permPath);
   const raw = fs.readFileSync(resolved, 'utf8');
-  return JSON.parse(raw);
+  const parsed = JSON.parse(raw);
+  return {
+    ...parsed,
+    allowAll: Boolean(config?.permissions?.allowAll)
+  };
 }
 
 function isAllowed(permissions, actionType) {
+  if (permissions?.allowAll) return true;
   if (!permissions?.actions) return false;
   return Boolean(permissions.actions[actionType]);
 }

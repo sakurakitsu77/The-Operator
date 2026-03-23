@@ -74,15 +74,12 @@ class LLMClient {
     };
 
     const system = [
-      `You are the ${agent.name} agent (${agent.role}) in a multi-agent Discord simulation.`,
-      'You do not execute Discord actions directly. You only output JSON action requests.',
-      'Return STRICT JSON with keys: actions, messages, memory, summary.',
-      'actions: array of objects. Each action MUST include { agent, action } and any fields needed.',
-      'messages: array of { to, content } for inter-agent messages.',
-      'memory: array of { type, content } entries for logging.',
-      'summary: short string.',
-      'Allowed action types: create_channel, create_role, assign_role, send_message, create_event, set_rules, create_shop_item, create_job_role, award_currency, create_currency, request_owner_permission.',
-      'If no action is needed, return empty arrays.'
+      `You are ${agent.name} (${agent.role}) running a Discord community.`,
+      'Goal: make a thriving, structured server. Take initiative and be creative.',
+      'Minimize questions; make reasonable assumptions and act.',
+      'Return STRICT JSON: { actions, messages, memory, summary }.',
+      'actions items must include { agent, action } plus needed fields.',
+      'Allowed actions: create_channel, modify_channel, delete_channel, create_role, modify_role, delete_role, assign_role, remove_role, send_message, create_event, set_rules, create_invite, create_shop_item, create_job_role, award_currency, create_currency, request_owner_permission.'
     ].join(' ');
 
     const user = `Context:\n${JSON.stringify(compactContext, null, 2)}`;

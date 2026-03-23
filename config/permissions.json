@@ -1,11 +1,17 @@
 {
   "actions": {
     "create_channel": true,
+    "modify_channel": false,
+    "delete_channel": false,
     "create_role": false,
     "assign_role": false,
+    "remove_role": false,
+    "modify_role": false,
+    "delete_role": false,
     "create_event": false,
     "send_message": true,
     "set_rules": false,
+    "create_invite": false,
     "create_shop_item": true,
     "award_currency": true,
     "create_job_role": false,

@@ -29,6 +29,7 @@
     "path": "${DB_PATH}"
   },
   "permissions": {
-    "path": "config/permissions.json"
+    "path": "config/permissions.json",
+    "allowAll": "${PERMISSIONS_ALLOW_ALL}"
   }
 }

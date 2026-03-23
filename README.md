@@ -36,6 +36,7 @@ Required environment variables to set in Railway:
 - `RULES_CHANNEL` (optional)
 - `OWNER_REQUESTS_CHANNEL` (optional)
 - `DB_PATH` (optional, default `memory/ai_civ.db`)
+- `PERMISSIONS_ALLOW_ALL` (optional, `true` to bypass internal action checks)
 
 Note: SQLite data is stored on disk. For persistent memory across deploys, attach a Railway Volume and point `DB_PATH` at that mount.
 

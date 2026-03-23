@@ -1,20 +1,27 @@
 const { loadPermissions, isAllowed } = require('./permissions');
-const { createChannel } = require('./executors/channel');
-const { createRole, assignRole } = require('./executors/role');
+const { createChannel, modifyChannel, deleteChannel } = require('./executors/channel');
+const { createRole, assignRole, removeRole, modifyRole, deleteRole } = require('./executors/role');
 const { sendMessage } = require('./executors/message');
 const { createEvent } = require('./executors/event');
 const { setRules } = require('./executors/rules');
 const { handleEconomyAction } = require('./executors/economy');
 const { requestOwnerPermission } = require('./executors/owner');
+const { createInvite } = require('./executors/invite');
 const { warn } = require('../core/logger');
 
 const EXECUTORS = {
   create_channel: createChannel,
+  modify_channel: modifyChannel,
+  delete_channel: deleteChannel,
   create_role: createRole,
   assign_role: assignRole,
+  remove_role: removeRole,
+  modify_role: modifyRole,
+  delete_role: deleteRole,
   send_message: sendMessage,
   create_event: createEvent,
   set_rules: setRules,
+  create_invite: createInvite,
   create_shop_item: handleEconomyAction,
   create_job_role: handleEconomyAction,
   award_currency: handleEconomyAction,
