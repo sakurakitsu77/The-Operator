@@ -24,7 +24,7 @@ Required environment variables to set in Railway:
 - `DISCORD_OWNER_ID`
 - `LLM_PROVIDER` (use `openrouter`)
 - `OPENROUTER_API_KEY`
-- `OPENROUTER_MODEL` (use `deepseek/deepseek-chat-v3`)
+- `OPENROUTER_MODEL` (use `qwen/qwen3-next-80b-a3b-instruct:free`)
 - `OPENROUTER_SITE` (optional)
 - `OPENROUTER_APP` (optional)
 - `LOOP_INTERVAL_MINUTES` (optional, default 5)

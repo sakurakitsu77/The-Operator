@@ -4,6 +4,7 @@ class LLMClient {
   constructor(config) {
     this.provider = config?.llm?.provider || 'none';
     this.config = config?.llm || {};
+    this.defaultOpenRouterModel = 'qwen/qwen3-next-80b-a3b-instruct:free';
   }
 
   async generate(agent, context) {
@@ -83,6 +84,7 @@ class LLMClient {
 
     const { system, user } = this.buildPrompt(agent, context);
     const { apiKey, model, site, appName } = this.config.openrouter;
+    const resolvedModel = model || this.defaultOpenRouterModel;
 
     try {
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -94,7 +96,7 @@ class LLMClient {
           ...(appName ? { 'X-Title': appName } : {})
         },
         body: JSON.stringify({
-          model,
+          model: resolvedModel,
           messages: [
             { role: 'system', content: system },
             { role: 'user', content: user }
