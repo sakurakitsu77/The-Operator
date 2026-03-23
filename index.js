@@ -20,11 +20,11 @@ async function start() {
   const llm = new LLMClient(config);
   const agentManager = new AgentManager({ memoryStore, llm, config });
 
-  registerDiscordEvents(client, memoryStore);
+  const loop = createLoop({ client, config, memoryStore, agentManager });
+  registerDiscordEvents(client, memoryStore, loop.trigger);
 
   client.once('ready', () => {
     log(`Logged in as ${client.user.tag}`);
-    const loop = createLoop({ client, config, memoryStore, agentManager });
     loop.start();
   });
 

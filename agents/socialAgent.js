@@ -30,6 +30,25 @@ class SocialAgent extends BaseAgent {
       });
     }
 
+    const mentions = inbox.filter((msg) => msg.content?.type === 'mention');
+    mentions.forEach((msg) => {
+      const userId = msg.content.userId;
+      const channelId = msg.content.channelId;
+      const reply = `<@${userId}> I'm setting up the server world right now. Tell me what you'd like to see here.`;
+
+      actions.push({
+        agent: this.name,
+        action: 'send_message',
+        channel_id: channelId,
+        content: reply
+      });
+
+      memory.push({
+        type: 'mention_reply',
+        content: { userId, channelId }
+      });
+    });
+
     if (observation?.memberDelta > 0 && memberJoins.length === 0) {
       actions.push({
         agent: this.name,
