@@ -1,0 +1,13 @@
+{
+  "actions": {
+    "create_channel": true,
+    "create_role": false,
+    "create_event": false,
+    "send_message": true,
+    "set_rules": false,
+    "create_shop_item": true,
+    "award_currency": true,
+    "create_job_role": false,
+    "request_owner_permission": true
+  }
+}

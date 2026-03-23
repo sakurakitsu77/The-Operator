@@ -1,0 +1,30 @@
+{
+  "discord": {
+    "token": "${DISCORD_TOKEN}",
+    "guildId": "${DISCORD_GUILD_ID}",
+    "ownerId": "${DISCORD_OWNER_ID}",
+    "announcementChannel": "${ANNOUNCEMENTS_CHANNEL}",
+    "rulesChannel": "${RULES_CHANNEL}",
+    "ownerRequestsChannel": "${OWNER_REQUESTS_CHANNEL}"
+  },
+  "loop": {
+    "intervalMinutes": "${LOOP_INTERVAL_MINUTES}"
+  },
+  "llm": {
+    "provider": "${LLM_PROVIDER}",
+    "openai": {
+      "apiKey": "${OPENAI_API_KEY}",
+      "model": "${OPENAI_MODEL}"
+    },
+    "gemini": {
+      "apiKey": "${GEMINI_API_KEY}",
+      "model": "${GEMINI_MODEL}"
+    }
+  },
+  "db": {
+    "path": "${DB_PATH}"
+  },
+  "permissions": {
+    "path": "config/permissions.json"
+  }
+}

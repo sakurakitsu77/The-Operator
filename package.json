@@ -1,0 +1,15 @@
+{
+  "name": "discord-ai-civ",
+  "version": "0.1.0",
+  "description": "Experimental multi-agent AI system that manages a Discord server as a living world.",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.4.5",
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.5"
+  }
+}
